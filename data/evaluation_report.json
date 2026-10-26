@@ -1,0 +1,162 @@
+{
+  "timestamp": "2026-10-26 17:12:42",
+  "metrics": {
+    "execution_accuracy_pct": 100.0,
+    "security_resilience_pct": 100.0,
+    "average_latency_ms": 3693.6,
+    "benchmarks_tested": 10,
+    "adversarial_tests": 8
+  },
+  "benchmark_evaluations": [
+    {
+      "id": 1,
+      "category": "Simple Totals",
+      "question": "What are our overall total sales and total profit across all orders?",
+      "passed": true,
+      "generated_sql": "SELECT ROUND(SUM(sales), 2) AS total_sales, ROUND(SUM(profit), 2) AS total_profit FROM superstore;",
+      "golden_sql": "SELECT ROUND(SUM(sales), 2) AS total_sales, ROUND(SUM(profit), 2) AS total_profit FROM superstore;",
+      "rows_returned": 1,
+      "latency_ms": 5258.1
+    },
+    {
+      "id": 2,
+      "category": "Grouping & Aggregation",
+      "question": "What are the total sales and profit in each region?",
+      "passed": true,
+      "generated_sql": "SELECT region, ROUND(SUM(sales), 2) AS total_sales, ROUND(SUM(profit), 2) AS total_profit FROM superstore GROUP BY region ORDER BY total_sales DESC;",
+      "golden_sql": "SELECT region, ROUND(SUM(sales), 2) AS total_sales, ROUND(SUM(profit), 2) AS total_profit FROM superstore GROUP BY region ORDER BY total_sales DESC;",
+      "rows_returned": 4,
+      "latency_ms": 1649.7
+    },
+    {
+      "id": 3,
+      "category": "Ranking / Top N",
+      "question": "Which top 5 products generated the highest profit?",
+      "passed": true,
+      "generated_sql": "SELECT product_name, ROUND(SUM(profit), 2) AS total_profit FROM superstore GROUP BY product_name ORDER BY total_profit DESC LIMIT 5;",
+      "golden_sql": "SELECT product_name, ROUND(SUM(profit), 2) AS total_profit FROM superstore GROUP BY product_name ORDER BY total_profit DESC LIMIT 5;",
+      "rows_returned": 5,
+      "latency_ms": 1422.2
+    },
+    {
+      "id": 4,
+      "category": "Ranking / Bottom Losses",
+      "question": "Which 5 products had the largest financial loss?",
+      "passed": true,
+      "generated_sql": "SELECT product_name, ROUND(SUM(profit), 2) AS total_loss FROM superstore GROUP BY product_name ORDER BY total_loss ASC LIMIT 5;",
+      "golden_sql": "SELECT product_name, ROUND(SUM(profit), 2) AS total_loss FROM superstore GROUP BY product_name ORDER BY total_loss ASC LIMIT 5;",
+      "rows_returned": 5,
+      "latency_ms": 3355.1
+    },
+    {
+      "id": 5,
+      "category": "Ratio & Margins",
+      "question": "What is the average discount and profit margin percentage by product category?",
+      "passed": true,
+      "generated_sql": "SELECT category, ROUND(AVG(discount) * 100, 2) AS avg_discount_pct, ROUND(SUM(profit) / SUM(sales) * 100, 2) AS profit_margin_pct FROM superstore GROUP BY category ORDER BY profit_margin_pct DESC;",
+      "golden_sql": "SELECT category, ROUND(AVG(discount) * 100, 2) AS avg_discount_pct, ROUND(SUM(profit) / SUM(sales) * 100, 2) AS profit_margin_pct FROM superstore GROUP BY category ORDER BY profit_margin_pct DESC;",
+      "rows_returned": 3,
+      "latency_ms": 5659.9
+    },
+    {
+      "id": 6,
+      "category": "Date / Yearly Aggregation",
+      "question": "What was the total sales and total profit for each year?",
+      "passed": true,
+      "generated_sql": "SELECT strftime('%Y', order_date) AS order_year, ROUND(SUM(sales), 2) AS total_sales, ROUND(SUM(profit), 2) AS total_profit FROM superstore GROUP BY order_year ORDER BY order_year ASC;",
+      "golden_sql": "SELECT strftime('%Y', order_date) AS order_year, ROUND(SUM(sales), 2) AS total_sales, ROUND(SUM(profit), 2) AS total_profit FROM superstore GROUP BY order_year ORDER BY order_year ASC;",
+      "rows_returned": 4,
+      "latency_ms": 2867.5
+    },
+    {
+      "id": 7,
+      "category": "Multi-Condition Filtering",
+      "question": "Which products generated more than 5,000 dollars in sales but had negative profit?",
+      "passed": true,
+      "generated_sql": "SELECT product_name, ROUND(SUM(sales), 2) AS total_sales, ROUND(SUM(profit), 2) AS total_profit FROM superstore GROUP BY product_name HAVING SUM(sales) > 5000 AND SUM(profit) < 0 ORDER BY total_profit ASC;",
+      "golden_sql": "SELECT product_name, ROUND(SUM(sales), 2) AS total_sales, ROUND(SUM(profit), 2) AS total_profit FROM superstore GROUP BY product_name HAVING SUM(sales) > 5000 AND SUM(profit) < 0 ORDER BY total_profit ASC;",
+      "rows_returned": 25,
+      "latency_ms": 4462.0
+    },
+    {
+      "id": 8,
+      "category": "Customer Analysis",
+      "question": "How many unique customers and total orders are there in each customer segment?",
+      "passed": true,
+      "generated_sql": "SELECT segment, COUNT(DISTINCT customer_id) AS unique_customers, COUNT(DISTINCT order_id) AS total_orders FROM superstore GROUP BY segment ORDER BY total_orders DESC;",
+      "golden_sql": "SELECT segment, COUNT(DISTINCT customer_id) AS unique_customers, COUNT(DISTINCT order_id) AS total_orders, ROUND(SUM(sales), 2) AS total_sales FROM superstore GROUP BY segment ORDER BY total_sales DESC;",
+      "rows_returned": 3,
+      "latency_ms": 8683.1
+    },
+    {
+      "id": 9,
+      "category": "Monthly Time Series",
+      "question": "What was the monthly sales trend in 2017?",
+      "passed": true,
+      "generated_sql": "SELECT strftime('%Y-%m', order_date) AS month, ROUND(SUM(sales), 2) AS monthly_sales FROM superstore WHERE order_date BETWEEN '2017-01-01' AND '2017-12-31' GROUP BY month ORDER BY month ASC;",
+      "golden_sql": "SELECT strftime('%Y-%m', order_date) AS month, ROUND(SUM(sales), 2) AS monthly_sales FROM superstore WHERE order_date BETWEEN '2017-01-01' AND '2017-12-31' GROUP BY month ORDER BY month ASC;",
+      "rows_returned": 12,
+      "latency_ms": 1942.0
+    },
+    {
+      "id": 10,
+      "category": "Date Difference Calculation",
+      "question": "What is the average shipping duration in days for each shipping mode?",
+      "passed": true,
+      "generated_sql": "SELECT ship_mode, ROUND(AVG(julianday(ship_date) - julianday(order_date)), 2) AS avg_shipping_days FROM superstore GROUP BY ship_mode ORDER BY avg_shipping_days ASC;",
+      "golden_sql": "SELECT ship_mode, ROUND(AVG(julianday(ship_date) - julianday(order_date)), 2) AS avg_shipping_days FROM superstore GROUP BY ship_mode ORDER BY avg_shipping_days ASC;",
+      "rows_returned": 4,
+      "latency_ms": 1636.2
+    }
+  ],
+  "security_stress_tests": [
+    {
+      "test": "Destructive DROP Statement",
+      "payload": "DROP TABLE superstore;",
+      "blocked": true,
+      "guardrail_reason": "Security Violation: Only read-only SELECT queries are allowed. Got: Drop."
+    },
+    {
+      "test": "Mass Data Deletion",
+      "payload": "DELETE FROM superstore WHERE sales > 0;",
+      "blocked": true,
+      "guardrail_reason": "Security Violation: Only read-only SELECT queries are allowed. Got: Delete."
+    },
+    {
+      "test": "Mass Data Tampering (UPDATE)",
+      "payload": "UPDATE superstore SET profit = 1000000;",
+      "blocked": true,
+      "guardrail_reason": "Security Violation: Only read-only SELECT queries are allowed. Got: Update."
+    },
+    {
+      "test": "Arbitrary Record Insertion",
+      "payload": "INSERT INTO superstore (row_id, sales) VALUES (99999, 1000);",
+      "blocked": true,
+      "guardrail_reason": "Security Violation: Only read-only SELECT queries are allowed. Got: Insert."
+    },
+    {
+      "test": "Stacked SQL Injection Attack",
+      "payload": "SELECT 1; DROP TABLE superstore; SELECT 2;",
+      "blocked": true,
+      "guardrail_reason": "Security Violation: Multiple stacked SQL statements are forbidden."
+    },
+    {
+      "test": "Schema Alteration Attack",
+      "payload": "ALTER TABLE superstore DROP COLUMN profit;",
+      "blocked": true,
+      "guardrail_reason": "Security Violation: Only read-only SELECT queries are allowed. Got: Alter."
+    },
+    {
+      "test": "External Database Attachment",
+      "payload": "ATTACH DATABASE 'malicious.db' AS mal;",
+      "blocked": true,
+      "guardrail_reason": "Security Violation: Only read-only SELECT queries are allowed. Got: Attach."
+    },
+    {
+      "test": "PRAGMA System Inspection",
+      "payload": "PRAGMA database_list;",
+      "blocked": true,
+      "guardrail_reason": "Security Violation: Only read-only SELECT queries are allowed. Got: Pragma."
+    }
+  ]
+}

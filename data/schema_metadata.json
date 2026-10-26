@@ -1,0 +1,133 @@
+{
+  "table_name": "superstore",
+  "table_description": "Transactional sales records of retail orders across the United States between 2014 and 2017.",
+  "columns": [
+    {
+      "name": "row_id",
+      "type": "INTEGER PRIMARY KEY",
+      "description": "Unique integer identifier for each transaction line item in the database."
+    },
+    {
+      "name": "order_id",
+      "type": "TEXT",
+      "description": "Unique alphanumeric order number. Multiple items in the same purchase share the same order_id."
+    },
+    {
+      "name": "order_date",
+      "type": "TEXT",
+      "description": "Date when the order was placed in ISO-8601 'YYYY-MM-DD' format. Use strftime('%Y', order_date) for year and strftime('%Y-%m', order_date) for month."
+    },
+    {
+      "name": "ship_date",
+      "type": "TEXT",
+      "description": "Date when the order was shipped in ISO-8601 'YYYY-MM-DD' format."
+    },
+    {
+      "name": "ship_mode",
+      "type": "TEXT",
+      "description": "Shipping class: 'Standard Class', 'Second Class', 'First Class', or 'Same Day'."
+    },
+    {
+      "name": "customer_id",
+      "type": "TEXT",
+      "description": "Unique identifier for each customer. Use COUNT(DISTINCT customer_id) to calculate unique customer counts."
+    },
+    {
+      "name": "customer_name",
+      "type": "TEXT",
+      "description": "Full name of the individual customer."
+    },
+    {
+      "name": "segment",
+      "type": "TEXT",
+      "description": "Customer market segment: 'Consumer', 'Corporate', or 'Home Office'."
+    },
+    {
+      "name": "country",
+      "type": "TEXT",
+      "description": "Country where the customer is located (United States)."
+    },
+    {
+      "name": "city",
+      "type": "TEXT",
+      "description": "City where the order was delivered (e.g. New York City, Los Angeles)."
+    },
+    {
+      "name": "state",
+      "type": "TEXT",
+      "description": "State of delivery (e.g. California, New York, Texas)."
+    },
+    {
+      "name": "postal_code",
+      "type": "TEXT",
+      "description": "US ZIP code stored as text to preserve leading zeros."
+    },
+    {
+      "name": "region",
+      "type": "TEXT",
+      "description": "Geographical sales region: 'West', 'East', 'Central', or 'South'."
+    },
+    {
+      "name": "product_id",
+      "type": "TEXT",
+      "description": "Unique identifier for the product item."
+    },
+    {
+      "name": "category",
+      "type": "TEXT",
+      "description": "Top-level product category: 'Furniture', 'Office Supplies', or 'Technology'."
+    },
+    {
+      "name": "sub_category",
+      "type": "TEXT",
+      "description": "Product sub-category (17 total): 'Chairs', 'Tables', 'Bookcases', 'Furnishings', 'Binders', 'Paper', 'Storage', 'Art', 'Appliances', 'Labels', 'Envelopes', 'Fasteners', 'Supplies', 'Phones', 'Accessories', 'Machines', 'Copiers'."
+    },
+    {
+      "name": "product_name",
+      "type": "TEXT",
+      "description": "Full product title/description."
+    },
+    {
+      "name": "sales",
+      "type": "REAL",
+      "description": "Monetary gross revenue for the line item in USD ($)."
+    },
+    {
+      "name": "quantity",
+      "type": "INTEGER",
+      "description": "Number of units purchased in this order line."
+    },
+    {
+      "name": "discount",
+      "type": "REAL",
+      "description": "Discount rate applied as a decimal between 0.0 (0%) and 0.8 (80%)."
+    },
+    {
+      "name": "profit",
+      "type": "REAL",
+      "description": "Net monetary profit or loss in USD ($). Can be negative for unprofitable transactions."
+    }
+  ],
+  "business_metrics": [
+    {
+      "metric": "Profit Margin Percentage",
+      "formula": "ROUND(SUM(profit) / SUM(sales) * 100, 2)",
+      "description": "Percentage ratio of net profit relative to total sales revenue."
+    },
+    {
+      "metric": "Shipping Duration in Days",
+      "formula": "ROUND(AVG(julianday(ship_date) - julianday(order_date)), 2)",
+      "description": "Average elapsed time in days between order placement and shipment."
+    },
+    {
+      "metric": "Average Discount Percentage",
+      "formula": "ROUND(AVG(discount) * 100, 2)",
+      "description": "Mean discount percentage across orders."
+    },
+    {
+      "metric": "Loss-Making / Unprofitable Products",
+      "formula": "SUM(profit) < 0",
+      "description": "Filter or having condition identifying items where total profit is negative."
+    }
+  ]
+}

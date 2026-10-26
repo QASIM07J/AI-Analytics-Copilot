@@ -1,0 +1,32 @@
+# Virtual Environments
+AI-Anaylytics-env/
+.venv/
+venv/
+ENV/
+
+# Environment Variables & Secrets
+.env
+.env.local
+
+# Local Personal Notes & Learning Guide (Keep local only)
+LEARNING_GUIDE.md
+
+# SQLite Database & Storage
+*.db
+*.sqlite
+*.sqlite3
+data/*.db
+
+# Python cache & artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
