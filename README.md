@@ -10,6 +10,8 @@ The application translates complex natural-language business questions into veri
 
 The system uses a defense-in-depth architecture that decouples semantic query formulation, schema retrieval, security verification, and analytical presentation.
 
+![System Architecture and Workflow](diagram.png)
+
 ```
 +-------------------------------------------------------------------+
 |                        User Interface                             |

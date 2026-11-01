@@ -18,10 +18,13 @@ from openai import OpenAI
 # Load environment variables from .env
 load_dotenv(override=True)
 
-# Active verified free models on OpenRouter
+# Active verified free models on OpenRouter with automatic fallback
 DEFAULT_MODELS: List[str] = [
     "cohere/north-mini-code:free",
-    "poolside/laguna-s-2.1:free",
+    "nvidia/nemotron-3.5-lightning:free",
+    "google/gemma-4-31b-it:free",
+    "google/gemma-4-26b-a4b-it:free",
+    "liquid/lfm-2.5-2.6b:free",
     "recursive/flint-v1.0:free",
 ]
 
@@ -115,6 +118,8 @@ def clean_sql_output(raw_output: str) -> str:
     select_match = re.search(r"(SELECT\s+[^;]+)", sql, flags=re.IGNORECASE | re.DOTALL)
     if select_match:
         sql = select_match.group(1).strip()
+    elif not sql.strip().upper().startswith("SELECT"):
+        raise ValueError(f"No valid SELECT statement found in output: {raw_output[:100]}...")
 
     # Clean up excess whitespace/newlines and terminate with single semicolon
     sql = re.sub(r"\s+", " ", sql).strip().rstrip(";") + ";"
